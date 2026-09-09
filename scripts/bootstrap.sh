@@ -13,10 +13,12 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP="$ROOT/apps/sudoku"
 ORG="io.pinkspider"
 
-# AdMob *app* ids — Google's official test ids. Replace with your real
-# ones (AdMob console → Apps → App settings) before a store release.
-ADMOB_APP_ID_ANDROID="ca-app-pub-3940256099942544~3347511713"
-ADMOB_APP_ID_IOS="ca-app-pub-3940256099942544~1458002511"
+# AdMob *app* ids — real, from the AdMob console.
+# These are safe to ship while ad *unit* ids stay on Google's test units:
+# the app id is what ties the build to your UMP consent and IDFA messages,
+# and without a real one the consent form never appears at all.
+ADMOB_APP_ID_ANDROID="ca-app-pub-6329038356545416~6275485456"
+ADMOB_APP_ID_IOS="ca-app-pub-6329038356545416~7733509539"
 
 say() { printf '\n\033[1;34m▶ %s\033[0m\n' "$*"; }
 die() { printf '\033[1;31m✖ %s\033[0m\n' "$*" >&2; exit 1; }
