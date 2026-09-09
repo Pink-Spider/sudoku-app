@@ -55,12 +55,19 @@ flutter run -t lib/main_dev.dart
 
 배너는 이 과정이 끝나기 전에 그려질 수 있어서 `AdBanner`가 백오프 재시도를 한다.
 
+**개발 중 권장 조합: 실제 앱 ID + 테스트 광고 단위 ID.** UMP 동의 메시지와 ATT
+설명 메시지는 AdMob 계정의 앱 단위로 설정되므로, Google 샘플 앱 ID로는 동의
+플로우를 아예 테스트할 수 없다. 반면 광고 단위는 테스트 ID로 둬야 자가 클릭이
+무효 트래픽이 되지 않는다. AdMob은 스토어 미출시 앱도 수동 등록할 수 있다.
+
 ## 출시 전 체크리스트
 
 - [ ] AdMob 콘솔에서 앱 등록 → 실제 앱 ID + 광고 단위 3종(배너/전면/리워드) 발급
-- [ ] AdMob 앱 ID 교체 (`scripts/bootstrap.sh` 상단 변수 → AndroidManifest / Info.plist)
-- [ ] 광고 단위 ID 교체 (`apps/sudoku/lib/app/app_config.dart` → `AppConfig.prod`)
+- [ ] AdMob 앱 ID 교체: `scripts/bootstrap.sh` 상단 두 변수 수정 후 `./scripts/bootstrap.sh`
+      (재실행하면 기존 값을 덮어쓴다 — 안 바뀌면 그게 버그다)
 - [ ] AdMob 콘솔에서 GDPR 메시지 + iOS IDFA(ATT) 메시지 설정 (UMP)
+- [ ] 광고 단위 ID 교체 (`apps/sudoku/lib/app/app_config.dart` → `AppConfig.prod`)
+      — 이건 **스토어 출시 직전에만**. 그 전까지는 테스트 단위 ID를 유지한다.
 - [ ] 내 기기를 AdMob 테스트 기기로 등록 (실광고 자가 클릭 = 무효 트래픽, 계정 정지 사유)
 - [ ] App Store Connect 앱 개인정보(App Privacy) 설문 — 광고 SDK가 식별자를 수집하므로 필수
 - [ ] `app-ads.txt`를 도메인에 배포 (미설정 시 광고 단가 하락)

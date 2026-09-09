@@ -62,21 +62,9 @@ fi
 
 # ----------------------------------------------------- 4. platform patches
 say "Patching Android (AdMob app id)"
-MANIFEST="android/app/src/main/AndroidManifest.xml"
-if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MANIFEST"; then
-  python3 - "$MANIFEST" "$ADMOB_APP_ID_ANDROID" <<'PY'
-import sys, re
-path, app_id = sys.argv[1], sys.argv[2]
-s = open(path).read()
-meta = f'''        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="{app_id}"/>
-'''
-# insert right after the opening <application ...> tag
-s = re.sub(r'(<application\b[^>]*>\n)', r'\1' + meta, s, count=1)
-open(path, 'w').write(s)
-PY
-fi
+"$ROOT/scripts/lib/set_admob_app_id.py" \
+  android/app/src/main/AndroidManifest.xml "$ADMOB_APP_ID_ANDROID"
+
 say "Patching iOS (deployment target, AdMob app id, ATT text, SKAdNetwork)"
 # App Store Connect rejects uploads below iOS 15 (warning 90068; hard cutoff
 # Spring 2027), and the Flutter template still emits 13.0. Unlike minSdk,
