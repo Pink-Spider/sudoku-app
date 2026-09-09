@@ -15,17 +15,26 @@ class AdBanner extends StatefulWidget {
 }
 
 class _AdBannerState extends State<AdBanner> {
+  /// The banner may be built before the ads SDK has finished initialising
+  /// (consent and ATT resolve after the first frame), and a load can also
+  /// fail on transient no-fill. Retry a few times with backoff rather than
+  /// leaving a permanent hole in the layout.
+  static const _maxAttempts = 5;
+
   BannerAd? _ad;
   AdSize? _size;
   bool _loaded = false;
+  int _attempt = 0;
+  Timer? _retry;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_ad == null) _load();
+    if (_ad == null) unawaited(_load());
   }
 
   Future<void> _load() async {
+    unawaited(_ad?.dispose() ?? Future<void>.value());
     final width = MediaQuery.sizeOf(context).width.truncate();
     final size =
         await AdSize.getLargeAnchoredAdaptiveBannerAdSize(width);
@@ -41,7 +50,9 @@ class _AdBannerState extends State<AdBanner> {
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
-          if (mounted) setState(() => _ad = null);
+          if (!mounted) return;
+          setState(() => _ad = null);
+          _scheduleRetry();
         },
       ),
     );
@@ -50,8 +61,19 @@ class _AdBannerState extends State<AdBanner> {
     setState(() {});
   }
 
+  void _scheduleRetry() {
+    if (_attempt >= _maxAttempts) return;
+    final delay = Duration(seconds: 2 << _attempt);
+    _attempt++;
+    _retry?.cancel();
+    _retry = Timer(delay, () {
+      if (mounted) unawaited(_load());
+    });
+  }
+
   @override
   void dispose() {
+    _retry?.cancel();
     _ad?.dispose();
     super.dispose();
   }

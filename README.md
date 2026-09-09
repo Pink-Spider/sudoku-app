@@ -41,11 +41,29 @@ flutter run -t lib/main_dev.dart
 - 이름 후보 중복 확인: `scripts/check_app_name.sh "이름"` — 미국 스토어 게시앱만 보므로
   예약된 미출시 이름은 못 잡는다. 후보를 2~3개 준비해 둘 것.
 
+## 광고 동의 흐름 (건드리기 전에 읽을 것)
+
+시작 순서는 `apps/sudoku/lib/app/bootstrap.dart`의 `_startAds()`에 있고, 순서가
+그 자체로 요구사항이다.
+
+1. **UMP 동의** — Google이 ATT보다 먼저 처리하도록 요구한다.
+2. **ATT 권한** — 첫 프레임이 그려진 뒤에. 앱이 아직 active가 아닐 때 요청하면
+   iOS가 조용히 거부하고, 그 거부는 되돌릴 수 없다. `runApp` 전에 하면 안 되는 이유.
+   `google_mobile_ads`는 ATT를 처리하지 않는다 — UMP는 GDPR용이고 ATT는 IDFA용으로
+   별개다. ATT 없이는 iOS가 비개인화 광고만 받아서 eCPM이 크게 깎인다.
+3. **SDK 초기화** — 첫 광고 요청이 두 답을 모두 알고 나가도록 마지막에.
+
+배너는 이 과정이 끝나기 전에 그려질 수 있어서 `AdBanner`가 백오프 재시도를 한다.
+
 ## 출시 전 체크리스트
 
+- [ ] AdMob 콘솔에서 앱 등록 → 실제 앱 ID + 광고 단위 3종(배너/전면/리워드) 발급
 - [ ] AdMob 앱 ID 교체 (`scripts/bootstrap.sh` 상단 변수 → AndroidManifest / Info.plist)
 - [ ] 광고 단위 ID 교체 (`apps/sudoku/lib/app/app_config.dart` → `AppConfig.prod`)
-- [ ] AdMob 콘솔에서 GDPR 메시지 + iOS IDFA 메시지 설정 (UMP)
+- [ ] AdMob 콘솔에서 GDPR 메시지 + iOS IDFA(ATT) 메시지 설정 (UMP)
+- [ ] 내 기기를 AdMob 테스트 기기로 등록 (실광고 자가 클릭 = 무효 트래픽, 계정 정지 사유)
+- [ ] App Store Connect 앱 개인정보(App Privacy) 설문 — 광고 SDK가 식별자를 수집하므로 필수
+- [ ] `app-ads.txt`를 도메인에 배포 (미설정 시 광고 단가 하락)
 - [ ] Info.plist `SKAdNetworkItems` 전체 목록 추가
 - [ ] Firebase 프로젝트 연결 후 Analytics/Remote Config 구현체를 `providers.dart`에 연결
 - [ ] 스토어 리스팅 10개국어 이상 현지화

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:core_ads/core_ads.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,27 +10,17 @@ import 'app.dart';
 import 'app_config.dart';
 import 'providers.dart';
 
-/// Shared entry point for every flavor. Order matters:
-/// 1. platform bindings
-/// 2. local storage
-/// 3. consent (UMP) — must finish before the ads SDK initialises
-/// 4. ads SDK init + pre-load (not awaited: first frame should not wait)
+/// Shared entry point for every flavor.
+///
+/// The first frame is not blocked on the ad stack: the UI starts, and the
+/// consent -> ATT -> SDK init chain runs behind it. That ordering is not
+/// cosmetic — see [_startAds].
 Future<void> bootstrap(AppConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final prefs = await SharedPreferences.getInstance();
-
-  final AdService ads;
-  if (kIsWeb) {
-    ads = NoopAdService();
-  } else {
-    final consent = ConsentManager(forceEea: config.forceEeaConsent);
-    final canRequestAds = await consent.gatherConsent();
-    ads = canRequestAds ? AdMobAdService(ids: config.adUnitIds) : NoopAdService();
-    // Fire and forget — ads warm up while the home screen renders.
-    // ignore: unawaited_futures
-    ads.initialize();
-  }
+  final AdService ads =
+      kIsWeb ? NoopAdService() : AdMobAdService(ids: config.adUnitIds);
 
   runApp(
     ProviderScope(
@@ -40,4 +32,28 @@ Future<void> bootstrap(AppConfig config) async {
       child: const SudokuApp(),
     ),
   );
+
+  if (ads is AdMobAdService) unawaited(_startAds(ads, config));
+}
+
+/// Consent, then tracking permission, then the SDK — in that order.
+///
+/// * UMP first because Google requires consent to be resolved before ATT.
+/// * ATT only once a frame has been rendered: iOS silently denies a request
+///   made while the app is not yet active, and a denial is permanent.
+/// * The SDK last, so its first ad request already knows both answers.
+///
+/// Banners tolerate arriving before this finishes; [AdBanner] retries.
+Future<void> _startAds(AdMobAdService ads, AppConfig config) async {
+  await WidgetsBinding.instance.endOfFrame;
+
+  final consent = ConsentManager(forceEea: config.forceEeaConsent);
+  final canRequestAds = await consent.gatherConsent();
+  await consent.requestTracking();
+
+  if (canRequestAds) {
+    await ads.initialize();
+  } else {
+    debugPrint('[ads] consent withheld, ads disabled for this session');
+  }
 }

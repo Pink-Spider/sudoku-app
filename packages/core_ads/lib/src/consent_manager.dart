@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -62,6 +63,23 @@ class ConsentManager {
         }
       }));
     }
+  }
+
+  /// Ask for App Tracking Transparency permission on iOS.
+  ///
+  /// The ads SDK does **not** do this: UMP covers GDPR consent, while ATT is
+  /// Apple's separate gate on the IDFA. Without it iOS serves only
+  /// non-personalised ads, which is a large eCPM cut, and the
+  /// NSUserTrackingUsageDescription in Info.plist is dead weight.
+  ///
+  /// Call it *after* [gatherConsent] (Google requires that order) and only
+  /// once the app is actually on screen — iOS silently denies the request
+  /// when the app is not yet active, which is why this is not run before
+  /// `runApp`. No-op on Android and on repeat calls.
+  Future<TrackingStatus> requestTracking() async {
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status != TrackingStatus.notDetermined) return status;
+    return AppTrackingTransparency.requestTrackingAuthorization();
   }
 
   /// Dev only: forget consent so the form shows again.
