@@ -77,7 +77,14 @@ s = re.sub(r'(<application\b[^>]*>\n)', r'\1' + meta, s, count=1)
 open(path, 'w').write(s)
 PY
 fi
-say "Patching iOS (AdMob app id, ATT text, SKAdNetwork)"
+say "Patching iOS (deployment target, AdMob app id, ATT text, SKAdNetwork)"
+# App Store Connect rejects uploads below iOS 15 (warning 90068; hard cutoff
+# Spring 2027), and the Flutter template still emits 13.0. Unlike minSdk,
+# this one does need patching -- flutter build does not regenerate pbxproj.
+sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = 1[34]\.0;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' \
+  ios/Runner.xcodeproj/project.pbxproj
+sed -i '' -E "s/^#? ?platform :ios, '[0-9.]+'/platform :ios, '15.0'/" ios/Podfile
+
 PLIST="ios/Runner/Info.plist"
 PB=/usr/libexec/PlistBuddy
 # PlistBuddy, not plutil: plutil -insert with -json silently rewrites the
