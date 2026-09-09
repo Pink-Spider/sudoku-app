@@ -53,14 +53,24 @@ flutter run -t lib/main_dev.dart
 
 ## TestFlight
 
+사전 준비(최초 1회): App Store Connect에 앱 레코드를 웹에서 직접 만든다.
+ASC API에는 앱 생성 엔드포인트가 없어서 Transporter로도 CLI로도 못 만든다.
+
+```bash
+scripts/build_ios.sh [build-number]      # 빌드 후 Finder에서 .ipa 열어줌 → Transporter로 Deliver
+```
+
+버전당 빌드 번호는 재사용할 수 없다. 재업로드할 때마다 인자로 올리거나
+`apps/sudoku/pubspec.yaml`의 `+N`을 올릴 것.
+
+CLI로 자동화하려면(나중에 CI로 옮길 때) API 키 방식도 있다:
+
 ```bash
 scripts/upload_ios.sh [build-number]     # 빌드 → 검증 → 업로드
 ```
 
-사전 준비(최초 1회): App Store Connect에 앱 레코드 생성(ASC API에 생성
-엔드포인트가 없어 웹에서 직접), 그리고 App Manager 역할 API 키를
-`~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8`에 두고
-`ASC_KEY_ID`·`ASC_ISSUER_ID` export.
+App Manager 역할 API 키를 `~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8`에
+두고 `ASC_KEY_ID`·`ASC_ISSUER_ID` export.
 
 ## 다음 앱 추가하는 법
 
