@@ -73,6 +73,14 @@ flutter pub get                                 # 루트
   앱마다 만들 필요 없고, 대신 스토어 리스팅의 개발자 웹사이트를
   `https://pink-spider.github.io`로 넣어야 크롤러가 찾는다.
 
+## Play Console 계정 함정
+
+- Play Console(및 AdMob)은 `developer.ygpark@gmail.com`이 아니라
+  **`ceo@pink-spider.io`가 관리자**다. developer 계정은 "새 앱을 만들려면 권한이
+  필요합니다"로 막히고 사용자·권한 페이지도 잠겨 있다. 두 계정 모두 같은
+  Pink Spider 개발자 계정(8732421573193870105)에 접근하므로 앱 소유권은 같다.
+- 계정 전체에 **2026-09-30까지 Android 개발자 인증** 요구가 걸려 있다.
+
 ## 다음 단계 후보 (우선순위 순)
 
 1. 실기기에서 테스트 광고 3종 노출 확인 (배너·전면·리워드), UMP 동의 플로우

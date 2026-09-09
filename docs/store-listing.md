@@ -8,6 +8,7 @@
 | 파일 | 크기 | 어디에 |
 |---|---|---|
 | `apps/sudoku/build/screenshots/<locale>-*.png` | 1320×2868 | ASC 6.9" / Play 폰 |
+| `apps/sudoku/build/screenshots-tablet/<locale>-*.png` | 1668×2420 | Play 7"·10" 태블릿 (**필수**) |
 | `apps/sudoku/build/store/icon-512.png` | 512×512 | Play 아이콘 |
 | `apps/sudoku/build/store/feature-graphic.png` | 1024×500 | Play 피처 그래픽 (필수) |
 | 앱 아이콘 1024 | 번들 내장 | ASC가 빌드에서 자동 추출 |
@@ -16,9 +17,14 @@
 
 ```bash
 cd apps/sudoku
-tool/screenshots.sh          # 시뮬레이터 구동, 4개 언어 × 4컷
-tool/gen_store_assets.sh     # Play 아이콘 + 피처 그래픽
+tool/screenshots.sh                          # 폰: 1320x2868
+tool/screenshots.sh "iPad Pro 11-inch (M4)"  # 태블릿: 1668x2420
+tool/gen_store_assets.sh                     # Play 아이콘 + 피처 그래픽
 ```
+
+**Play는 7인치·10인치 태블릿 스크린샷이 둘 다 필수다**(폰만으로는 게시가 막힌다).
+같은 하네스에 기기만 바꿔 찍으면 되고, `takeScreenshot`은 Flutter 표면만 캡처하므로
+iOS 상태바가 안 들어간다. 그래서 iOS 시뮬레이터로 찍어도 Play에 그대로 쓸 수 있다.
 
 스크린샷은 시드 고정이라 다시 찍어도 같은 보드가 나온다. 화면이 바뀌어서
 달라진 것인지 구분하기 위해서다. 광고는 `NoopAdService`라 테스트 광고가
@@ -97,8 +103,13 @@ chance after running out of mistakes, or an hour with no ads at all.
 **간단한 설명 (80자)**
 
 ```
-A new sudoku every day. Four difficulties and hints that explain the logic.
+A sudoku puzzle every day. Four difficulties and hints that explain the logic.
 ```
+
+> 처음에 "A **new** sudoku every day..."로 넣었더니 Play가
+> *"매장 상태나 프로그램을 나타내는 키워드를 사용하면 안 됩니다"* 경고를 띄웠다.
+> `new`, `best`, `top`, `#1`, `sale`, `free` 같은 홍보성 단어는 간단한 설명에서
+> 피할 것. 저장은 되지만 **Play 홍보 대상에서 제외될 수 있다.**
 
 **자세한 설명** — ASC 설명과 동일하게 사용.
 
@@ -267,7 +278,7 @@ wollen oder eine Stunde ohne Werbung wünschen.
       앱마다 파일을 따로 만들 필요는 없다. 대신 위의 **개발자 웹사이트**를
       두 스토어 리스팅에 반드시 넣을 것 — 그게 크롤러의 유일한 연결 고리다.
 - [ ] 지원 URL을 개인정보처리방침이 아닌 전용 페이지로 분리
-- [ ] Play용 태블릿 스크린샷(선택, 있으면 노출에 유리)
+- [x] Play 태블릿 스크린샷 (선택이 아니라 **필수**였다)
 - [x] Android 릴리스 서명 키 — [docs/android-signing.md](android-signing.md).
       **키스토어와 key.properties는 git에 없으니 지금 백업할 것.**
 - [ ] Play 앱 서명 가입 (신규 앱 기본값, 업로드 키 분실 시 유일한 복구 수단)
