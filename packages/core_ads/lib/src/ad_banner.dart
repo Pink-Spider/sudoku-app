@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -26,10 +28,10 @@ class _AdBannerState extends State<AdBanner> {
   Future<void> _load() async {
     final width = MediaQuery.sizeOf(context).width.truncate();
     final size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(width);
+        await AdSize.getLargeAnchoredAdaptiveBannerAdSize(width);
     if (!mounted || size == null) return;
     _size = size;
-    _ad = BannerAd(
+    final ad = BannerAd(
       adUnitId: widget.adUnitId,
       size: size,
       request: const AdRequest(),
@@ -42,7 +44,9 @@ class _AdBannerState extends State<AdBanner> {
           if (mounted) setState(() => _ad = null);
         },
       ),
-    )..load();
+    );
+    _ad = ad;
+    unawaited(ad.load());
     setState(() {});
   }
 

@@ -34,12 +34,12 @@ class ConsentManager {
     ConsentInformation.instance.requestConsentInfoUpdate(
       params,
       () async {
-        ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
+        unawaited(ConsentForm.loadAndShowConsentFormIfRequired((formError) async {
           if (formError != null) {
             debugPrint('[consent] form error: ${formError.message}');
           }
           done.complete(await ConsentInformation.instance.canRequestAds());
-        });
+        }));
       },
       (error) async {
         debugPrint('[consent] update error: ${error.message}');
@@ -56,11 +56,11 @@ class ConsentManager {
     final status =
         await ConsentInformation.instance.getPrivacyOptionsRequirementStatus();
     if (status == PrivacyOptionsRequirementStatus.required) {
-      ConsentForm.showPrivacyOptionsForm((formError) {
+      unawaited(ConsentForm.showPrivacyOptionsForm((formError) {
         if (formError != null) {
           debugPrint('[consent] privacy options error: ${formError.message}');
         }
-      });
+      }));
     }
   }
 

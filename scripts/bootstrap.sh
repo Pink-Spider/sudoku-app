@@ -61,7 +61,7 @@ else
 fi
 
 # ----------------------------------------------------- 4. platform patches
-say "Patching Android (AdMob app id, minSdk 23)"
+say "Patching Android (AdMob app id)"
 MANIFEST="android/app/src/main/AndroidManifest.xml"
 if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MANIFEST"; then
   python3 - "$MANIFEST" "$ADMOB_APP_ID_ANDROID" <<'PY'
@@ -77,29 +77,22 @@ s = re.sub(r'(<application\b[^>]*>\n)', r'\1' + meta, s, count=1)
 open(path, 'w').write(s)
 PY
 fi
-if [[ -f android/app/build.gradle.kts ]]; then
-  sed -i '' -E 's/minSdk = flutter\.minSdkVersion/minSdk = 23/' android/app/build.gradle.kts
-elif [[ -f android/app/build.gradle ]]; then
-  sed -i '' -E 's/minSdkVersion flutter\.minSdkVersion/minSdkVersion 23/; s/minSdk = flutter\.minSdkVersion/minSdk = 23/' android/app/build.gradle
-fi
-
 say "Patching iOS (AdMob app id, ATT text, SKAdNetwork)"
 PLIST="ios/Runner/Info.plist"
-plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID_IOS" "$PLIST"
-plutil -replace NSUserTrackingUsageDescription -string \
-  "This identifier will be used to deliver personalized ads to you." "$PLIST"
-if ! plutil -extract SKAdNetworkItems raw "$PLIST" >/dev/null 2>&1; then
+PB=/usr/libexec/PlistBuddy
+# PlistBuddy, not plutil: plutil -insert with -json silently rewrites the
+# whole file when the key path does not exist yet.
+"$PB" -c "Delete :GADApplicationIdentifier" "$PLIST" 2>/dev/null || true
+"$PB" -c "Add :GADApplicationIdentifier string $ADMOB_APP_ID_IOS" "$PLIST"
+"$PB" -c "Delete :NSUserTrackingUsageDescription" "$PLIST" 2>/dev/null || true
+"$PB" -c "Add :NSUserTrackingUsageDescription string 'This identifier will be used to deliver personalized ads to you.'" "$PLIST"
+if ! "$PB" -c "Print :SKAdNetworkItems" "$PLIST" >/dev/null 2>&1; then
   # Google's own network id. Add the full list from
   # https://developers.google.com/admob/ios/ios14#skadnetwork before release.
-  plutil -insert SKAdNetworkItems -json \
-    '[{"SKAdNetworkIdentifier":"cstr6suwn9.skadnetwork"}]' "$PLIST"
+  "$PB" -c "Add :SKAdNetworkItems array" "$PLIST"
+  "$PB" -c "Add :SKAdNetworkItems:0 dict" "$PLIST"
+  "$PB" -c "Add :SKAdNetworkItems:0:SKAdNetworkIdentifier string cstr6suwn9.skadnetwork" "$PLIST"
 fi
-# AdMob SDK needs iOS 13+; Flutter templates already target >= 13 on
-# recent versions, but make sure the Podfile pins it.
-if [[ -f ios/Podfile ]]; then
-  sed -i '' -E "s/^# platform :ios, '[0-9.]+'/platform :ios, '13.0'/" ios/Podfile
-fi
-
 # --------------------------------------------------------- 5. generate + verify
 say "Generating localizations"
 flutter gen-l10n

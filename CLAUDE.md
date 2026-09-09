@@ -4,14 +4,25 @@
 같은 엔진으로 킬러 스도쿠·카쿠로·Tango 등을 이어서 출시하는 것이 전제이므로,
 **앱 코드에 룰 특화 로직을 넣지 말고 `packages/rules_*`와 `puzzle_engine` 경계를 지켜라.**
 
-## 현재 상태 (2026-09-09, 스캐폴딩 직후)
+## 현재 상태 (2026-09-09, bootstrap 통과)
 
-- 코드는 Cowork 세션에서 작성됐고 **아직 Flutter 툴체인으로 한 번도 빌드/테스트되지 않았다**
-  (그 환경에서 pub.dev·Dart SDK 접근이 막혀 있었음). 스도쿠 생성/솔버/난이도 알고리즘만 Python 포트로 검증됨.
-- 따라서 첫 할 일: `./scripts/bootstrap.sh` 실행 → analyze/test 에러를 잡는다. 컴파일 에러가 몇 개 나올 수 있다는 전제로 시작할 것.
-- `android/`, `ios/`는 bootstrap이 `flutter create`로 생성한다(리포에 없음).
+- `./scripts/bootstrap.sh` 통과. `flutter analyze` 이슈 0개, 테스트 42개 전부 통과
+  (puzzle_engine 14 / rules_sudoku 19 / core_ads 4 / apps_sudoku 5).
+- Android APK, iOS Runner.app 둘 다 debug 빌드 성공. 아직 **실기기에서 실행해 본 적은 없다**
+  (광고 3종 실제 노출·UMP 동의 플로우 미확인).
+- 툴체인: Flutter 3.44.5 / Dart 3.12.2 (fvm). `google_mobile_ads` 9.1.0.
+  6.0.0은 Gradle 9에서 `configurations.all` 제거로 빌드 불가 → 9.x 필수.
+- `android/`, `ios/`는 리포에 커밋되어 있다. bootstrap은 없을 때만 `flutter create`로 만든다.
 - Firebase 미연결. `core_analytics`는 인터페이스 + Debug/Local 구현만 있다.
 - AdMob은 전부 Google 테스트 ID. 실제 ID 교체 지점은 README 체크리스트 참고.
+
+## 플랫폼 설정 주의 (재발 방지)
+
+- Flutter 템플릿 기본값과 싸우지 마라. minSdk(24)·iOS deployment target(13.0) 모두
+  `google_mobile_ads` 요구사항과 이미 일치한다. build.gradle.kts를 손으로 고쳐도
+  `flutter build`가 되돌리고, Podfile의 platform 줄을 풀면 "non-standard Podfile" 경고가 뜬다.
+- Info.plist 수정은 `PlistBuddy`로만. `plutil -insert ... -json`은 키가 없을 때
+  파일 전체를 그 JSON으로 덮어써서 plist를 날린다(실제로 한 번 당했다).
 
 ## 구조
 
@@ -44,9 +55,8 @@ flutter pub get                                 # 루트
 
 ## 다음 단계 후보 (우선순위 순)
 
-1. bootstrap 통과시키기 (컴파일/린트 수정)
-2. 실기기에서 테스트 광고 3종 노출 확인 (배너·전면·리워드), UMP 동의 플로우
-3. 통계 화면(난이도별 클리어 수·최고 기록), 데일리 캘린더/스트릭
-4. Firebase Analytics + Remote Config 구현체 연결
-5. 스토어 리스팅 10개국어, 아이콘/스크린샷, 개인정보처리방침 페이지
-6. 2호 룰 패키지(킬러 스도쿠)
+1. 실기기에서 테스트 광고 3종 노출 확인 (배너·전면·리워드), UMP 동의 플로우
+2. 통계 화면(난이도별 클리어 수·최고 기록), 데일리 캘린더/스트릭
+3. Firebase Analytics + Remote Config 구현체 연결
+4. 스토어 리스팅 10개국어, 아이콘/스크린샷, 개인정보처리방침 페이지
+5. 2호 룰 패키지(킬러 스도쿠)
