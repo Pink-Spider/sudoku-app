@@ -19,6 +19,7 @@
   테스트 광고 단위여야 자가 클릭이 무효 트래픽이 되지 않는다.
   실제 광고 단위는 스토어 출시 직전 `AppConfig.prod`에서만 교체한다.
 - UMP 메시지 2종(GDPR, IDFA) 모두 AdMob 콘솔에 게시 완료. 반영까지 최대 1시간.
+  동의창 확인 절차는 `docs/consent-testing.md` 참고(한국에서는 기기 해시 없이 안 뜬다).
 - AdMob 콘솔은 `developer.ygpark@gmail.com` 계정에 있다(`ceo@pink-spider.io`가 아님).
 
 ## 플랫폼 설정 주의 (재발 방지)
