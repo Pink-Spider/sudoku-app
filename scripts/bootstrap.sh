@@ -86,6 +86,12 @@ PB=/usr/libexec/PlistBuddy
 "$PB" -c "Add :GADApplicationIdentifier string $ADMOB_APP_ID_IOS" "$PLIST"
 "$PB" -c "Delete :NSUserTrackingUsageDescription" "$PLIST" 2>/dev/null || true
 "$PB" -c "Add :NSUserTrackingUsageDescription string 'This identifier will be used to deliver personalized ads to you.'" "$PLIST"
+"$PB" -c "Delete :CFBundleDisplayName" "$PLIST" 2>/dev/null || true
+"$PB" -c "Add :CFBundleDisplayName string 'Sudoku Daily'" "$PLIST"
+# Declares we use no non-exempt encryption, so App Store Connect stops
+# asking the export-compliance question on every single upload.
+"$PB" -c "Delete :ITSAppUsesNonExemptEncryption" "$PLIST" 2>/dev/null || true
+"$PB" -c "Add :ITSAppUsesNonExemptEncryption bool false" "$PLIST"
 if ! "$PB" -c "Print :SKAdNetworkItems" "$PLIST" >/dev/null 2>&1; then
   # Google's own network id. Add the full list from
   # https://developers.google.com/admob/ios/ios14#skadnetwork before release.
@@ -94,6 +100,9 @@ if ! "$PB" -c "Print :SKAdNetworkItems" "$PLIST" >/dev/null 2>&1; then
   "$PB" -c "Add :SKAdNetworkItems:0:SKAdNetworkIdentifier string cstr6suwn9.skadnetwork" "$PLIST"
 fi
 # --------------------------------------------------------- 5. generate + verify
+say "Generating app icons and launch images"
+./tool/gen_icons.sh
+
 say "Generating localizations"
 flutter gen-l10n
 

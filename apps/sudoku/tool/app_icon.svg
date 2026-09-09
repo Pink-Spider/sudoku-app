@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Source of truth for the app icon. Rasterize with tool/gen_icons.sh.
+       Deliberately a 3x3 block grid, not the full 9x9: at 40px the thin
+       cell lines of a real board turn into grey mush. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1E3A8A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- board plate -->
+  <rect x="152" y="152" width="720" height="720" rx="56" fill="#FFFFFF"/>
+
+  <!-- highlighted cell, echoing the in-game selection colour -->
+  <rect x="152" y="392" width="240" height="240" fill="#BBDEFB"/>
+
+  <!-- 3x3 block lines -->
+  <g stroke="#1E293B" stroke-width="26" stroke-linecap="butt">
+    <line x1="392" y1="152" x2="392" y2="872"/>
+    <line x1="632" y1="152" x2="632" y2="872"/>
+    <line x1="152" y1="392" x2="872" y2="392"/>
+    <line x1="152" y1="632" x2="872" y2="632"/>
+  </g>
+
+  <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="700"
+     font-size="176" text-anchor="middle" fill="#1E293B">
+    <text x="272" y="332">5</text>
+    <text x="752" y="332">9</text>
+    <text x="512" y="572">7</text>
+    <text x="272" y="812">1</text>
+    <text x="752" y="812">3</text>
+  </g>
+
+  <!-- the number the highlighted cell resolves to, in the entry colour -->
+  <text x="272" y="572" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-weight="700" font-size="176" text-anchor="middle" fill="#1565C0">4</text>
+</svg>
