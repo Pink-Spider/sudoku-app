@@ -21,19 +21,21 @@ Future<void> bootstrap(AppConfig config) async {
   final prefs = await SharedPreferences.getInstance();
   final AdService ads =
       kIsWeb ? NoopAdService() : AdMobAdService(ids: config.adUnitIds);
+  final consent = ConsentManager(forceEea: config.forceEeaConsent);
 
   runApp(
     ProviderScope(
       overrides: [
         appConfigProvider.overrideWithValue(config),
         adServiceProvider.overrideWithValue(ads),
+        consentManagerProvider.overrideWithValue(consent),
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
       child: const SudokuApp(),
     ),
   );
 
-  if (ads is AdMobAdService) unawaited(_startAds(ads, config));
+  if (ads is AdMobAdService) unawaited(_startAds(ads, consent));
 }
 
 /// Consent, then tracking permission, then the SDK — in that order.
@@ -44,10 +46,9 @@ Future<void> bootstrap(AppConfig config) async {
 /// * The SDK last, so its first ad request already knows both answers.
 ///
 /// Banners tolerate arriving before this finishes; [AdBanner] retries.
-Future<void> _startAds(AdMobAdService ads, AppConfig config) async {
+Future<void> _startAds(AdMobAdService ads, ConsentManager consent) async {
   await WidgetsBinding.instance.endOfFrame;
 
-  final consent = ConsentManager(forceEea: config.forceEeaConsent);
   final canRequestAds = await consent.gatherConsent();
   await consent.requestTracking();
 

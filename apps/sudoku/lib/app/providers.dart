@@ -12,6 +12,12 @@ import 'app_config.dart';
 /// defaults make a missing override an immediate, obvious failure.
 final appConfigProvider = Provider<AppConfig>((_) => throw UnimplementedError());
 final adServiceProvider = Provider<AdService>((_) => throw UnimplementedError());
+
+/// Same instance the startup flow used, so the settings entry point can
+/// reopen the UMP privacy form. GDPR requires consent to be withdrawable,
+/// so this is not optional once a consent message is published.
+final consentManagerProvider =
+    Provider<ConsentManager>((_) => throw UnimplementedError());
 final sharedPreferencesProvider =
     Provider<SharedPreferences>((_) => throw UnimplementedError());
 

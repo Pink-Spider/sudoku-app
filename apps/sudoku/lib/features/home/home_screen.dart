@@ -46,10 +46,10 @@ class HomeScreen extends ConsumerWidget {
           IconButton(
             tooltip: l.privacySettings,
             icon: const Icon(Icons.privacy_tip_outlined),
-            onPressed: () {
-              // Wire to ConsentManager.showPrivacyOptions() once the UMP
-              // message is configured in the AdMob console.
-            },
+            // No-op outside regions where a privacy form is required,
+            // which is what showPrivacyOptions() already checks.
+            onPressed: () =>
+                ref.read(consentManagerProvider).showPrivacyOptions(),
           ),
         ],
       ),
