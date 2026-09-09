@@ -58,6 +58,25 @@ flutter run -t lib/main_dev.dart
 
 배너는 이 과정이 끝나기 전에 그려질 수 있어서 `AdBanner`가 백오프 재시도를 한다.
 
+### 한국에서 GDPR 동의창 테스트하기
+
+UMP는 한국을 동의 요구 지역으로 보지 않아 폼을 건너뛴다. dev 플레이버는
+디버그 지역을 EEA로 강제하고 실행할 때마다 이전 동의를 초기화하도록 되어 있지만,
+**디버그 지역은 등록된 테스트 기기에서만 적용된다.** 기기 해시 없이는 아무 일도
+일어나지 않고, 메시지를 게시하지 않은 것처럼 보인다.
+
+```bash
+# 1. 그냥 실행한다. 네이티브 로그에서 addTestDeviceHashedId 가 포함된 줄을 찾는다.
+cd apps/sudoku && flutter run -t lib/main_dev.dart
+
+# 2. 거기 나온 해시를 넣고 다시 실행하면 동의창이 뜬다.
+flutter run -t lib/main_dev.dart --dart-define=UMP_TEST_DEVICE_IDS=<hash>
+```
+
+해시를 코드에 적지 않고 `--dart-define`으로 넘기는 이유는 기기 ID를 실수로
+커밋하지 않기 위해서다. prod 플레이버는 이 동작이 전부 꺼져 있다.
+ATT 프롬프트는 지역과 무관하므로 이 설정 없이도 확인할 수 있다.
+
 ATT 프롬프트 문구는 iOS 시스템 다이얼로그 안에 뜨는 문장이고, 허용률에 직접
 영향을 주므로 ARB가 아니라 `apps/sudoku/tool/infoplist/<lang>.strings`에 있다.
 원본을 `tool/`에 두는 이유는 `ios/`를 재생성해도 번역이 사라지지 않게 하기 위함이다.

@@ -21,7 +21,10 @@ Future<void> bootstrap(AppConfig config) async {
   final prefs = await SharedPreferences.getInstance();
   final AdService ads =
       kIsWeb ? NoopAdService() : AdMobAdService(ids: config.adUnitIds);
-  final consent = ConsentManager(forceEea: config.forceEeaConsent);
+  final consent = ConsentManager(
+    forceEea: config.forceEeaConsent,
+    testDeviceIds: config.umpTestDeviceIds,
+  );
 
   runApp(
     ProviderScope(
@@ -35,7 +38,7 @@ Future<void> bootstrap(AppConfig config) async {
     ),
   );
 
-  if (ads is AdMobAdService) unawaited(_startAds(ads, consent));
+  if (ads is AdMobAdService) unawaited(_startAds(ads, consent, config));
 }
 
 /// Consent, then tracking permission, then the SDK — in that order.
@@ -46,8 +49,25 @@ Future<void> bootstrap(AppConfig config) async {
 /// * The SDK last, so its first ad request already knows both answers.
 ///
 /// Banners tolerate arriving before this finishes; [AdBanner] retries.
-Future<void> _startAds(AdMobAdService ads, ConsentManager consent) async {
+Future<void> _startAds(
+  AdMobAdService ads,
+  ConsentManager consent,
+  AppConfig config,
+) async {
   await WidgetsBinding.instance.endOfFrame;
+
+  if (config.resetConsentOnLaunch) {
+    await consent.reset();
+    if (config.forceEeaConsent && config.umpTestDeviceIds.isEmpty) {
+      // Silent-failure guard: a debug geography without a registered test
+      // device is ignored, so the form simply never appears and it looks
+      // like the message was never published.
+      debugPrint('[consent] forcing EEA but no UMP test device id given. '
+          'Find the hash in the native log line containing '
+          '"addTestDeviceHashedId" and re-run with '
+          '--dart-define=UMP_TEST_DEVICE_IDS=<hash>');
+    }
+  }
 
   final canRequestAds = await consent.gatherConsent();
   await consent.requestTracking();
