@@ -38,6 +38,9 @@ flutter run -t lib/main_dev.dart
 - App Store 이름: **Sudoku Daily: Logic Puzzle** (26자, 상한 30자)
 - 부제: Daily challenge & smart hints
 - 기기 표시 이름: Sudoku Daily / 번들 ID: `io.pinkspider.sudoku`
+- 개인정보처리방침: <https://pink-spider.github.io/sudoku-privacy/>
+  (저장소 `Pink-Spider/sudoku-privacy`, en+ko. 수집 항목이 바뀌면 **여기부터** 고칠 것 —
+  AdMob GDPR 메시지와 양쪽 스토어 리스팅이 이 URL을 참조한다)
 - 이름 후보 중복 확인: `scripts/check_app_name.sh "이름"` — 미국 스토어 게시앱만 보므로
   예약된 미출시 이름은 못 잡는다. 후보를 2~3개 준비해 둘 것.
 
@@ -73,7 +76,9 @@ ATT 프롬프트 문구는 iOS 시스템 다이얼로그 안에 뜨는 문장이
 - [ ] AdMob 콘솔에서 앱 등록 → 실제 앱 ID + 광고 단위 3종(배너/전면/리워드) 발급
 - [ ] AdMob 앱 ID 교체: `scripts/bootstrap.sh` 상단 두 변수 수정 후 `./scripts/bootstrap.sh`
       (재실행하면 기존 값을 덮어쓴다 — 안 바뀌면 그게 버그다)
+- [x] 개인정보처리방침 페이지 (GDPR 메시지 게시의 선행 조건)
 - [ ] AdMob 콘솔에서 GDPR 메시지 + iOS IDFA(ATT) 메시지 설정 (UMP)
+      — 정책 URL 입력란에 위 주소를 넣고, **게시(Publish)까지** 눌러야 앱에 뜬다
 - [ ] 광고 단위 ID 교체 (`apps/sudoku/lib/app/app_config.dart` → `AppConfig.prod`)
       — 이건 **스토어 출시 직전에만**. 그 전까지는 테스트 단위 ID를 유지한다.
 - [ ] 내 기기를 AdMob 테스트 기기로 등록 (실광고 자가 클릭 = 무효 트래픽, 계정 정지 사유)
