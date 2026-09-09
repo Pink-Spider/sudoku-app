@@ -84,6 +84,8 @@ flutter run -t lib/main_dev.dart
 ## 스토어 제출
 
 문구·설문 답변·에셋 생성 절차는 [docs/store-listing.md](docs/store-listing.md).
+Android 서명은 [docs/android-signing.md](docs/android-signing.md) —
+키스토어는 리포에 없으니 백업 여부를 먼저 확인할 것.
 
 ```bash
 cd apps/sudoku
