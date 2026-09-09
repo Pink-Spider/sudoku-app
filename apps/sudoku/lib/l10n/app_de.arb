@@ -24,7 +24,7 @@
   "solvedTitle": "Gelöst!",
   "solvedBody": "{difficulty} · {time} · {mistakes} Fehler",
   "failedTitle": "Keine Fehler mehr übrig",
-  "failedBody": "Du hast {max} Fehler gemacht. Sieh dir eine Werbung an, um mit einer weiteren Chance fortzufahren.",
+  "failedBody": "Sie haben {max} Fehler gemacht. Sehen Sie sich eine Werbung an, um mit einer weiteren Chance fortzufahren.",
   "giveUp": "Aufgeben",
   "playAgain": "Nochmal spielen",
   "backHome": "Start",
