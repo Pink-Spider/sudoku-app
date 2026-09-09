@@ -82,7 +82,7 @@ PB=/usr/libexec/PlistBuddy
 "$PB" -c "Delete :GADApplicationIdentifier" "$PLIST" 2>/dev/null || true
 "$PB" -c "Add :GADApplicationIdentifier string $ADMOB_APP_ID_IOS" "$PLIST"
 "$PB" -c "Delete :NSUserTrackingUsageDescription" "$PLIST" 2>/dev/null || true
-"$PB" -c "Add :NSUserTrackingUsageDescription string 'This identifier will be used to deliver personalized ads to you.'" "$PLIST"
+"$PB" -c "Add :NSUserTrackingUsageDescription string 'Allowing this keeps Sudoku Daily free — it lets us show ads that fit you instead of random ones.'" "$PLIST"
 "$PB" -c "Delete :CFBundleDisplayName" "$PLIST" 2>/dev/null || true
 "$PB" -c "Add :CFBundleDisplayName string 'Sudoku Daily'" "$PLIST"
 # Declares we use no non-exempt encryption, so App Store Connect stops
@@ -99,6 +99,9 @@ fi
 # --------------------------------------------------------- 5. generate + verify
 say "Generating app icons and launch images"
 ./tool/gen_icons.sh
+
+say "Localizing Info.plist strings (ATT prompt)"
+./tool/gen_infoplist_strings.sh
 
 say "Generating localizations"
 flutter gen-l10n

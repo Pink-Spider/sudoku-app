@@ -31,7 +31,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<string>Allowing this keeps Sudoku Daily free — it lets us show ads that fit you instead of random ones.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

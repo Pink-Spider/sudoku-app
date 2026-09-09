@@ -55,6 +55,14 @@ flutter run -t lib/main_dev.dart
 
 배너는 이 과정이 끝나기 전에 그려질 수 있어서 `AdBanner`가 백오프 재시도를 한다.
 
+ATT 프롬프트 문구는 iOS 시스템 다이얼로그 안에 뜨는 문장이고, 허용률에 직접
+영향을 주므로 ARB가 아니라 `apps/sudoku/tool/infoplist/<lang>.strings`에 있다.
+원본을 `tool/`에 두는 이유는 `ios/`를 재생성해도 번역이 사라지지 않게 하기 위함이다.
+`tool/gen_infoplist_strings.sh`가 `ios/Runner/<lang>.lproj/`로 복사하고 Xcode
+프로젝트에 등록한다(등록을 빠뜨리면 파일만 있고 번들에 안 들어가서 전 언어가
+영어로 나온다). 언어를 추가하려면 `.strings` 파일과 그 스크립트의 `LANGS`를 함께 고칠 것.
+`Info.plist`의 기본값은 미번역 로케일용 폴백이므로 영어판과 같은 문구로 유지한다.
+
 **개발 중 권장 조합: 실제 앱 ID + 테스트 광고 단위 ID.** UMP 동의 메시지와 ATT
 설명 메시지는 AdMob 계정의 앱 단위로 설정되므로, Google 샘플 앱 ID로는 동의
 플로우를 아예 테스트할 수 없다. 반면 광고 단위는 테스트 ID로 둬야 자가 클릭이
