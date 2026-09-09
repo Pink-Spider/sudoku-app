@@ -286,7 +286,10 @@ wollen oder eine Stunde ohne Werbung wünschen.
 
 ## 제출 전 남은 것
 
-- [ ] 실제 광고 단위 ID로 교체 (`AppConfig.prod`) — 지금은 테스트 ID
+- [x] 실제 광고 단위 ID로 교체 (`AppConfig.prod`). dev는 테스트 단위 유지.
+- [ ] **AdMob "광고 게재가 제한됨" 해제** — 신규 앱은 스토어 등록정보와 연결될
+      때까지 게재가 제한된다. AdMob 앱 목록에서 "스토어 추가"로 Play/App Store
+      리스팅을 연결할 것. 이걸 안 하면 실제 광고 단위를 넣어도 채워지지 않는다.
 - [x] `app-ads.txt` — 이미 배포되어 있고 게시자 ID가 같아 그대로 적용된다
       (<https://pink-spider.github.io/app-ads.txt>, `pub-6329038356545416`).
       앱마다 파일을 따로 만들 필요는 없다. 대신 위의 **개발자 웹사이트**를

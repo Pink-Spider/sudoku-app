@@ -51,10 +51,12 @@ class AppConfig {
   static const _umpTestDeviceIds =
       String.fromEnvironment('UMP_TEST_DEVICE_IDS');
 
+  static List<String> get _adsTestDeviceIds => _umpTestDeviceIds.isEmpty
+      ? const <String>[]
+      : _umpTestDeviceIds.split(',').map((e) => e.trim()).toList();
+
   static AppConfig dev() {
-    final ids = _umpTestDeviceIds.isEmpty
-        ? const <String>[]
-        : _umpTestDeviceIds.split(',').map((e) => e.trim()).toList();
+    final ids = _adsTestDeviceIds;
     return AppConfig(
       flavor: Flavor.dev,
       appName: 'Sudoku (dev)',
@@ -68,16 +70,27 @@ class AppConfig {
     );
   }
 
-  /// TODO(prod): replace with the real ad unit ids from the AdMob console.
-  /// The AdMob *app* ids go in AndroidManifest.xml / Info.plist (see
-  /// scripts/bootstrap.sh). Until then prod also uses test ids so a
-  /// release build never serves real ads by accident.
+  /// Real ad units from the AdMob console (publisher 6329038356545416).
+  ///
+  /// Shipping these is only safe because [umpTestDeviceIds] doubles as the
+  /// ads SDK's test-device list: a registered device gets test ads even
+  /// from these units, so our own taps never become invalid traffic. Test
+  /// on a registered device, or on the dev flavor.
   static AppConfig prod() => AppConfig(
         flavor: Flavor.prod,
         appName: 'Sudoku',
         adUnitIds: AdUnitIds.platform(
-          android: AdUnitIds.test(),
-          ios: AdUnitIds.test(),
+          android: const AdUnitIds(
+            banner: 'ca-app-pub-REDACTED/REDACTED',
+            interstitial: 'ca-app-pub-REDACTED/REDACTED',
+            rewarded: 'ca-app-pub-REDACTED/REDACTED',
+          ),
+          ios: const AdUnitIds(
+            banner: 'ca-app-pub-REDACTED/REDACTED',
+            interstitial: 'ca-app-pub-REDACTED/REDACTED',
+            rewarded: 'ca-app-pub-REDACTED/REDACTED',
+          ),
         ),
+        umpTestDeviceIds: _adsTestDeviceIds,
       );
 }

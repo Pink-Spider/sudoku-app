@@ -14,10 +14,12 @@
   6.0.0은 Gradle 9에서 `configurations.all` 제거로 빌드 불가 → 9.x 필수.
 - `android/`, `ios/`는 리포에 커밋되어 있다. bootstrap은 없을 때만 `flutter create`로 만든다.
 - Firebase 미연결. `core_analytics`는 인터페이스 + Debug/Local 구현만 있다.
-- AdMob **앱 ID는 실제 값**(게시자 6329038356545416), **광고 단위 ID는 테스트 값**이다.
-  이 조합이 개발 중 정석: 앱 ID가 있어야 UMP 동의/IDFA 메시지가 연결되고,
-  테스트 광고 단위여야 자가 클릭이 무효 트래픽이 되지 않는다.
-  실제 광고 단위는 스토어 출시 직전 `AppConfig.prod`에서만 교체한다.
+- AdMob 앱 ID와 **광고 단위 ID 모두 실제 값**이다(게시자 6329038356545416).
+  prod만 실제 단위를 쓰고 dev는 테스트 단위를 유지한다.
+- **자가 클릭 방지가 코드에 들어 있다.** `--dart-define=UMP_TEST_DEVICE_IDS=<해시>`로
+  넘긴 기기는 `MobileAds.updateRequestConfiguration`에 등록되어 실제 단위에서도
+  테스트 광고만 받는다. 실기기로 prod를 테스트할 때는 **반드시 해시를 넘길 것** —
+  실제 광고를 직접 탭하면 무효 트래픽으로 AdMob 계정이 정지될 수 있다.
 - UMP 메시지 2종(GDPR, IDFA) 모두 AdMob 콘솔에 게시 완료. 반영까지 최대 1시간.
   동의창 확인 절차는 `docs/consent-testing.md` 참고(한국에서는 기기 해시 없이 안 뜬다).
 - AdMob 콘솔은 `developer.ygpark@gmail.com` 계정에 있다(`ceo@pink-spider.io`가 아님).

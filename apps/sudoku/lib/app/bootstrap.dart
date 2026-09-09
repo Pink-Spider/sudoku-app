@@ -20,7 +20,12 @@ Future<void> bootstrap(AppConfig config) async {
 
   final prefs = await SharedPreferences.getInstance();
   final AdService ads =
-      kIsWeb ? NoopAdService() : AdMobAdService(ids: config.adUnitIds);
+      kIsWeb
+          ? NoopAdService()
+          : AdMobAdService(
+              ids: config.adUnitIds,
+              testDeviceIds: config.umpTestDeviceIds,
+            );
   final consent = ConsentManager(
     forceEea: config.forceEeaConsent,
     testDeviceIds: config.umpTestDeviceIds,

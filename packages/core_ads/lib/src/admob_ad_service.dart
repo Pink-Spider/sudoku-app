@@ -14,10 +14,18 @@ import 'ad_unit_ids.dart';
 class AdMobAdService implements AdService {
   AdMobAdService({
     required this.ids,
+    this.testDeviceIds = const [],
     this.log = _defaultLog,
   });
 
   final AdUnitIds ids;
+
+  /// Devices that must always receive test ads, even from real ad units.
+  ///
+  /// This is the guard that makes shipping real unit ids in a build you
+  /// install yourself safe: without it, tapping your own live ad is
+  /// invalid traffic, which is grounds for suspending an AdMob account.
+  final List<String> testDeviceIds;
   final void Function(String message) log;
 
   InterstitialAd? _interstitial;
@@ -30,6 +38,12 @@ class AdMobAdService implements AdService {
 
   @override
   Future<void> initialize() async {
+    if (testDeviceIds.isNotEmpty) {
+      await MobileAds.instance.updateRequestConfiguration(
+        RequestConfiguration(testDeviceIds: testDeviceIds),
+      );
+      log('test devices registered: ${testDeviceIds.length}');
+    }
     await MobileAds.instance.initialize();
     _loadInterstitial();
     _loadRewarded();
