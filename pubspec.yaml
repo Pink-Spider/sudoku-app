@@ -1,0 +1,19 @@
+name: sudoku_app_workspace
+description: Pub workspace root for the puzzle-app factory (engine + rule packages + apps).
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+
+# Dart pub workspace: `flutter pub get` here resolves every member package
+# with a single lockfile. Add new apps / rule packages to this list.
+workspace:
+  - packages/puzzle_engine
+  - packages/rules_sudoku
+  - packages/core_ads
+  - packages/core_analytics
+  - packages/core_ui
+  - apps/sudoku
+
+dev_dependencies:
+  flutter_lints: ^5.0.0

@@ -1,0 +1,36 @@
+# Dart / Flutter
+.dart_tool/
+.packages
+build/
+pubspec.lock
+**/pubspec.lock
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+.vscode/settings.json
+
+# Platform build output
+**/android/.gradle/
+**/android/local.properties
+**/android/key.properties
+**/android/app/*.jks
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/ephemeral/
+**/ios/Runner.xcworkspace/xcuserdata/
+**/ios/Runner.xcodeproj/xcuserdata/
+
+# Secrets — never commit real config
+**/google-services.json
+**/GoogleService-Info.plist
+**/firebase_options.dart
+.env
+.env.*
+
+# Generated localizations
+**/lib/l10n/generated/
+
+# OS
+.DS_Store
