@@ -33,6 +33,14 @@ flutter run -t lib/main_dev.dart
 - 배너: 하단 적응형, 광고 제거 시간 동안 숨김
 - 앱 코드는 `google_mobile_ads`를 직접 import하지 않는다 — `AdService`만 사용
 
+## 스토어 아이덴티티
+
+- App Store 이름: **Sudoku Daily: Logic Puzzle** (26자, 상한 30자)
+- 부제: Daily challenge & smart hints
+- 기기 표시 이름: Sudoku Daily / 번들 ID: `io.pinkspider.sudoku`
+- 이름 후보 중복 확인: `scripts/check_app_name.sh "이름"` — 미국 스토어 게시앱만 보므로
+  예약된 미출시 이름은 못 잡는다. 후보를 2~3개 준비해 둘 것.
+
 ## 출시 전 체크리스트
 
 - [ ] AdMob 앱 ID 교체 (`scripts/bootstrap.sh` 상단 변수 → AndroidManifest / Info.plist)
@@ -42,6 +50,17 @@ flutter run -t lib/main_dev.dart
 - [ ] Firebase 프로젝트 연결 후 Analytics/Remote Config 구현체를 `providers.dart`에 연결
 - [ ] 스토어 리스팅 10개국어 이상 현지화
 - [ ] 미디에이션(AppLovin/Unity/Meta)은 일 노출 수만 회 넘긴 뒤 추가
+
+## TestFlight
+
+```bash
+scripts/upload_ios.sh [build-number]     # 빌드 → 검증 → 업로드
+```
+
+사전 준비(최초 1회): App Store Connect에 앱 레코드 생성(ASC API에 생성
+엔드포인트가 없어 웹에서 직접), 그리고 App Manager 역할 API 키를
+`~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8`에 두고
+`ASC_KEY_ID`·`ASC_ISSUER_ID` export.
 
 ## 다음 앱 추가하는 법
 
