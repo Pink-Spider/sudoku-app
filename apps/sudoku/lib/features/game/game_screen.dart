@@ -90,35 +90,61 @@ class _GameScreenState extends ConsumerState<GameScreen> with WidgetsBindingObse
         body: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${l.mistakes}: ${l.mistakesCount(state.mistakes, state.maxMistakes)}'),
-                    if (state.isDaily) const Icon(Icons.calendar_today, size: 18),
-                    Text('${l.time}: ${formatDuration(state.elapsed)}'),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: SudokuBoard(
-                  state: state,
-                  rule: rule,
-                  onCellTap: controller.select,
-                ),
-              ),
-              if (state.lastHint != null && state.hintHighlight.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: Text(
-                    _techniqueText(l, state.lastHint!.techniqueId),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall,
+              // Expanded rather than a trailing Spacer: on a tall phone the
+              // board is width-bound, and a Spacer dumped all the slack into
+              // one gap under it. Centring splits the slack above and below,
+              // and the status row rides with the board because it describes
+              // the board, not the screen.
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('${l.mistakes}: '
+                                '${l.mistakesCount(state.mistakes, state.maxMistakes)}'),
+                            if (state.isDaily)
+                              const Icon(Icons.calendar_today, size: 18),
+                            Text('${l.time}: ${formatDuration(state.elapsed)}'),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: SudokuBoard(
+                            state: state,
+                            rule: rule,
+                            onCellTap: controller.select,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              const Spacer(),
+              ),
+              // Fixed height so showing a hint does not shove the board and
+              // the number pad around mid-game.
+              SizedBox(
+                height: 44,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Center(
+                    child: state.lastHint != null && state.hintHighlight.isNotEmpty
+                        ? Text(
+                            _techniqueText(l, state.lastHint!.techniqueId),
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ),
+              ),
               GameToolbar(
                 canUndo: state.canUndo,
                 notesMode: state.notesMode,
