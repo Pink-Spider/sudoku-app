@@ -1,7 +1,7 @@
 name: sudoku
 description: Classic Sudoku — first app built on the puzzle engine. Ad-supported, no IAP.
 publish_to: none
-version: 0.1.0+8
+version: 1.0.0+9
 resolution: workspace
 
 environment:
