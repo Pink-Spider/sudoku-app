@@ -81,6 +81,16 @@ flutter run -t lib/main_dev.dart
 - [ ] 스토어 리스팅 10개국어 이상 현지화
 - [ ] 미디에이션(AppLovin/Unity/Meta)은 일 노출 수만 회 넘긴 뒤 추가
 
+## 스토어 제출
+
+문구·설문 답변·에셋 생성 절차는 [docs/store-listing.md](docs/store-listing.md).
+
+```bash
+cd apps/sudoku
+tool/screenshots.sh          # 4개 언어 × 4컷, 1320x2868 (ASC 6.9" 규격)
+tool/gen_store_assets.sh     # Play 아이콘 512 + 피처 그래픽 1024x500
+```
+
 ## TestFlight
 
 사전 준비(최초 1회): App Store Connect에 앱 레코드를 웹에서 직접 만든다.

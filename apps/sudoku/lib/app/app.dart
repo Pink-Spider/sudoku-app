@@ -8,7 +8,11 @@ import '../l10n/generated/app_localizations.dart';
 import 'providers.dart';
 
 class SudokuApp extends ConsumerWidget {
-  const SudokuApp({super.key});
+  const SudokuApp({super.key, this.locale});
+
+  /// Pins the UI language. Normally null (follow the device); the store
+  /// screenshot harness sets it to shoot every supported locale.
+  final Locale? locale;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,6 +23,7 @@ class SudokuApp extends ConsumerWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.system,
+      locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

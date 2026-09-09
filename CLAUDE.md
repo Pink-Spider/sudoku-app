@@ -59,6 +59,14 @@ flutter pub get                                 # 루트
 (cd apps/sudoku && flutter run -t lib/main_dev.dart)
 ```
 
+## 스토어 제출 준비
+
+- 스크린샷은 `integration_test/screenshots_test.dart` + `tool/screenshots.sh`로
+  자동 생성한다. bootstrap을 거치지 않고 ProviderScope를 직접 구성하므로
+  광고 없음·시드 고정·로케일 지정이 가능하다. 2호 앱도 이 구조를 그대로 쓴다.
+- 문구와 개인정보 설문 답변은 `docs/store-listing.md`. 앱 동작이 바뀌면
+  이 문서와 개인정보처리방침을 함께 고칠 것.
+
 ## 다음 단계 후보 (우선순위 순)
 
 1. 실기기에서 테스트 광고 3종 노출 확인 (배너·전면·리워드), UMP 동의 플로우
