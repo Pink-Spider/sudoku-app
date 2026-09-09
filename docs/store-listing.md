@@ -270,6 +270,20 @@ wollen oder eine Stunde ohne Werbung wünschen.
   막혀 eCPM이 급락한다)
 - 정부 앱 아님, 금융 앱 아님
 
+## Play Console 등록 상태 (2026-09-09)
+
+앱 생성됨: `Sudoku Daily: Logic Puzzle` / `io.pinkspider.sudoku`
+개발자 계정 `Pink Spider` (8732421573193870105), 앱 ID `4972306507413189771`.
+
+- 스토어 등록정보, 앱 콘텐츠 선언 11/11 완료
+- **내부 테스트 트랙 활성**, 0.1.0 (8) 출시됨, 테스터 목록 `Sudoku Daily 테스터`
+- 참여 링크는 내부 테스트 → 테스터 탭의 "링크 복사"
+  (`https://play.google.com/apps/internaltest/4699101214901903640`)
+- 신규 설치 크기 9.96MB (AAB 파일은 49MB지만 Play가 기기별로 분할 배포)
+
+**주의: 콘솔 작업은 `ceo@pink-spider.io`로 해야 한다.**
+`developer.ygpark@gmail.com`은 앱 생성 권한이 없다.
+
 ## 제출 전 남은 것
 
 - [ ] 실제 광고 단위 ID로 교체 (`AppConfig.prod`) — 지금은 테스트 ID
