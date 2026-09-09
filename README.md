@@ -77,8 +77,9 @@ ATT 프롬프트 문구는 iOS 시스템 다이얼로그 안에 뜨는 문장이
 - [ ] AdMob 앱 ID 교체: `scripts/bootstrap.sh` 상단 두 변수 수정 후 `./scripts/bootstrap.sh`
       (재실행하면 기존 값을 덮어쓴다 — 안 바뀌면 그게 버그다)
 - [x] 개인정보처리방침 페이지 (GDPR 메시지 게시의 선행 조건)
-- [ ] AdMob 콘솔에서 GDPR 메시지 + iOS IDFA(ATT) 메시지 설정 (UMP)
-      — 정책 URL 입력란에 위 주소를 넣고, **게시(Publish)까지** 눌러야 앱에 뜬다
+- [x] AdMob GDPR 메시지 "Sudoku Daily GDPR" 게시 (앱 2개, en+ko/ja/de,
+      거부 버튼 전 국가 사용, 정책 URL 연결)
+- [x] AdMob IDFA(ATT) 메시지 "Sudoku Daily IDFA" 게시 (iOS, en+ko/ja/de)
 - [ ] 광고 단위 ID 교체 (`apps/sudoku/lib/app/app_config.dart` → `AppConfig.prod`)
       — 이건 **스토어 출시 직전에만**. 그 전까지는 테스트 단위 ID를 유지한다.
 - [ ] 내 기기를 AdMob 테스트 기기로 등록 (실광고 자가 클릭 = 무효 트래픽, 계정 정지 사유)

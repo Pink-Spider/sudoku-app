@@ -14,7 +14,12 @@
   6.0.0은 Gradle 9에서 `configurations.all` 제거로 빌드 불가 → 9.x 필수.
 - `android/`, `ios/`는 리포에 커밋되어 있다. bootstrap은 없을 때만 `flutter create`로 만든다.
 - Firebase 미연결. `core_analytics`는 인터페이스 + Debug/Local 구현만 있다.
-- AdMob은 전부 Google 테스트 ID. 실제 ID 교체 지점은 README 체크리스트 참고.
+- AdMob **앱 ID는 실제 값**(게시자 6329038356545416), **광고 단위 ID는 테스트 값**이다.
+  이 조합이 개발 중 정석: 앱 ID가 있어야 UMP 동의/IDFA 메시지가 연결되고,
+  테스트 광고 단위여야 자가 클릭이 무효 트래픽이 되지 않는다.
+  실제 광고 단위는 스토어 출시 직전 `AppConfig.prod`에서만 교체한다.
+- UMP 메시지 2종(GDPR, IDFA) 모두 AdMob 콘솔에 게시 완료. 반영까지 최대 1시간.
+- AdMob 콘솔은 `developer.ygpark@gmail.com` 계정에 있다(`ceo@pink-spider.io`가 아님).
 
 ## 플랫폼 설정 주의 (재발 방지)
 
