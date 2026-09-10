@@ -68,9 +68,13 @@ flutter pub get                                 # 루트
   광고 없음·시드 고정·로케일 지정이 가능하다. 2호 앱도 이 구조를 그대로 쓴다.
 - 문구와 개인정보 설문 답변은 `docs/store-listing.md`. 앱 동작이 바뀌면
   이 문서와 개인정보처리방침을 함께 고칠 것.
-- Android 릴리스 서명은 `docs/android-signing.md`. 키스토어·비밀번호는 gitignore라
-  리포에 없다. `key.properties`가 없으면 릴리스가 **디버그 키로 서명되고 경고만 남는다**
-  (빌드는 성공하지만 Play 업로드는 거부된다).
+- Android 릴리스 서명은 `docs/android-signing.md`. **비밀 파일 3종(키스토어,
+  key.properties, Play API 키)은 리포가 아니라 `~/.pink-spider/secrets/sudoku/`에 있다.**
+  gitignore만으로는 `git clean -xdf`에 날아가서 밖으로 뺐다.
+  못 찾으면 릴리스가 **디버그 키로 서명되고 경고만 남는다**(빌드는 성공하지만
+  Play 업로드는 거부된다). `keytool -printcert -jarfile <aab>`로 확인할 것.
+- Play 업로드는 `cd apps/sudoku/android && fastlane internal|production`.
+  51MB AAB 드래그앤드롭이 필요 없다. `docs/play-api-automation.md` 참고.
 - `app-ads.txt`는 도메인당 하나이고 이미 배포돼 있다(`pub-6329038356545416`).
   앱마다 만들 필요 없고, 대신 스토어 리스팅의 개발자 웹사이트를
   `https://pink-spider.github.io`로 넣어야 크롤러가 찾는다.
@@ -82,6 +86,27 @@ flutter pub get                                 # 루트
   필요합니다"로 막히고 사용자·권한 페이지도 잠겨 있다. 두 계정 모두 같은
   Pink Spider 개발자 계정(8732421573193870105)에 접근하므로 앱 소유권은 같다.
 - 계정 전체에 **2026-09-30까지 Android 개발자 인증** 요구가 걸려 있다.
+
+## 릴리스 빌드는 반드시 실기기/에뮬레이터에서 확인
+
+`flutter analyze`와 테스트가 통과해도, **debug 빌드는 R8을 돌리지 않아서**
+릴리스에서만 죽는 부류를 못 잡는다. 실제로 2026-09-10 Play 거부의 원인이
+R8이 `androidx.work`의 Room 클래스를 난독화해 앱이 시작 즉시 죽은 것이었다
+(`docs/store-listing.md`의 거부 기록 참고).
+
+제출 전에 항상:
+
+```bash
+cd apps/sudoku
+flutter build apk --release -t lib/main_prod.dart
+adb install -r build/app/outputs/flutter-apk/app-release.apk
+adb logcat -c && adb shell am start -n io.pinkspider.sudoku/.MainActivity
+adb shell pidof io.pinkspider.sudoku    # 비어 있으면 죽은 것
+```
+
+아이콘·앱 이름도 런처에서 눈으로 확인할 것. 스토어 등록정보와 다르면
+"혼동을 야기하는 주장"으로 거부된다. `tool/gen_icons.sh`가 iOS와 Android를
+모두 만든다(예전엔 iOS만 만들어서 Flutter 기본 아이콘이 배포됐다).
 
 ## 다음 단계 후보 (우선순위 순)
 

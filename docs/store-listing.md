@@ -9,6 +9,7 @@
 |---|---|---|
 | `apps/sudoku/build/screenshots/<locale>-*.png` | 1320×2868 | ASC 6.9" / Play 폰 |
 | `apps/sudoku/build/screenshots-tablet/<locale>-*.png` | 1668×2420 | Play 7"·10" 태블릿 (**필수**) |
+| `apps/sudoku/build/screenshots-ipad13/<locale>-*.png` | 2064×2752 | ASC iPad 13" (**필수**) |
 | `apps/sudoku/build/store/icon-512.png` | 512×512 | Play 아이콘 |
 | `apps/sudoku/build/store/feature-graphic.png` | 1024×500 | Play 피처 그래픽 (필수) |
 | 앱 아이콘 1024 | 번들 내장 | ASC가 빌드에서 자동 추출 |
@@ -18,11 +19,16 @@
 ```bash
 cd apps/sudoku
 tool/screenshots.sh                          # 폰: 1320x2868
-tool/screenshots.sh "iPad Pro 11-inch (M4)"  # 태블릿: 1668x2420
+tool/screenshots.sh "iPad Pro 11-inch (M4)"  # Play 태블릿: 1668x2420
+tool/screenshots.sh "iPad Pro 13-inch (M4)"  # ASC iPad: 2064x2752
 tool/gen_store_assets.sh                     # Play 아이콘 + 피처 그래픽
 ```
 
 **Play는 7인치·10인치 태블릿 스크린샷이 둘 다 필수다**(폰만으로는 게시가 막힌다).
+**ASC도 iPad 스크린샷이 필수다** — `TARGETED_DEVICE_FAMILY = "1,2"`(iPhone+iPad)이라
+iPad 13" 슬롯을 채워야 심사에 넣을 수 있다. 이 슬롯은 2064×2752만 받으므로
+Play용 11인치 샷(1668×2420)은 쓸 수 없다. 한 번 올리면 나머지 iPad 크기에는
+자동 적용된다(iPhone 6.9" → 6.5"/6.3"/… 도 마찬가지).
 같은 하네스에 기기만 바꿔 찍으면 되고, `takeScreenshot`은 Flutter 표면만 캡처하므로
 iOS 상태바가 안 들어간다. 그래서 iOS 시뮬레이터로 찍어도 Play에 그대로 쓸 수 있다.
 
@@ -275,14 +281,146 @@ wollen oder eine Stunde ohne Werbung wünschen.
 앱 생성됨: `Sudoku Daily: Logic Puzzle` / `io.pinkspider.sudoku`
 개발자 계정 `Pink Spider` (8732421573193870105), 앱 ID `4972306507413189771`.
 
-- 스토어 등록정보, 앱 콘텐츠 선언 11/11 완료
-- **내부 테스트 트랙 활성**, 0.1.0 (8) 출시됨, 테스터 목록 `Sudoku Daily 테스터`
+- 스토어 등록정보, 앱 콘텐츠 선언 완료
+- **2026-09-10 13:20 프로덕션 검토 제출 완료.** 1.0.0 (9), 전체 출시(단계적 출시 아님),
+  국가/지역 **177개**, 상태 `검토 중인 변경사항`. 검토는 보통 7일 이내.
+- 내부 테스트 트랙, 0.1.0 (8) 출시됨, 테스터 목록 `Sudoku Daily 테스터`
 - 참여 링크는 내부 테스트 → 테스터 탭의 "링크 복사"
   (`https://play.google.com/apps/internaltest/4699101214901903640`)
 - 신규 설치 크기 9.96MB (AAB 파일은 49MB지만 Play가 기기별로 분할 배포)
 
 **주의: 콘솔 작업은 `ceo@pink-spider.io`로 해야 한다.**
 `developer.ygpark@gmail.com`은 앱 생성 권한이 없다.
+
+## App Store Connect 등록 상태 (2026-09-10, 심사 제출됨)
+
+Apple ID `6810079534`, 번들 `io.pinkspider.sudoku`, SKU `sudoku-daily`.
+
+- 앱이 수집하는 개인정보: **게시 완료**. 4개 유형(대략적 위치·기기 ID·제품 상호 작용·
+  광고 데이터) 전부 `타사 광고` / `신원에 연결 안 됨` / `추적 목적으로 사용됨`.
+- 앱 정보: 부제, 카테고리(게임 → 퍼즐·보드), 콘텐츠 권한(타사 콘텐츠 없음) 저장 완료.
+- 연령 등급: **4+** (브라질 A12, 베트남 00+). 1단계에서 `광고`만 "예".
+  한국은 GRAC 등급분류번호(RCN)를 넣을 수 있는 링크가 뜨지만 자체등급분류로 배포 가능.
+- 가격: 무료($0.00), 175개 국가/지역 전체 사용 가능.
+- 1.0 버전: 프로모션 텍스트·설명·키워드·지원/마케팅 URL·저작권, iPhone 6.9" 4장,
+  iPad 13" 4장, 빌드 1.0.0 (9) 연결, 심사 노트 작성, 로그인 불필요 체크 해제.
+- **4개 언어(en/ko/ja/de)** 전부 이름·부제·프로모션 텍스트·설명·키워드 + 언어별
+  스크린샷(iPhone 6.9" 4장, iPad 13" 4장)까지 입력됨.
+- **2026-09-10 13:10 심사 제출 완료.** 상태 `심사 대기 중`,
+  제출 ID `f6a83cac-b189-4bfd-8d2a-fd76b2b357f5`, 제출자 ParkYungoo.
+  심사는 최대 48시간. 결과는 이메일로 온다. 앱 심사 페이지에서 `제출 취소` 가능.
+- 출시 방식은 **자동 출시**(심사 통과 즉시 App Store 공개)로 두었다.
+  수동으로 바꾸려면 심사 통과 전에 버전 페이지의 "App Store 버전 출시"에서 변경.
+
+### 콘솔 자동화 메모
+
+ASC 텍스트 필드는 React 컨트롤드 인풋이라 키 입력을 흉내내면 **한글 받침이
+깨진다**("풉니다" → "�니다", "킬러" → "킴러"/"키러"). 다국어 문구는 반드시
+네이티브 setter로 넣고 input/change 이벤트를 직접 쏠 것:
+
+```js
+const setter = Object.getOwnPropertyDescriptor(
+  el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype,
+  'value').set;
+setter.call(el, value);
+el.dispatchEvent(new Event('input', {bubbles: true}));
+el.dispatchEvent(new Event('change', {bubbles: true}));
+```
+
+필드 이름: `name`, `subtitle`(앱 정보) / `promotionalText`, `description`,
+`keywords`, `supportUrl`, `marketingUrl`, `copyright`, `notes`,
+`contactFirstName`, `contactLastName`, `contactPhone`, `contactEmail`(버전 정보).
+
+### 프로덕션 출시에서 걸렸던 것
+
+1. **프로덕션 트랙에 국가/지역이 0개**여서 릴리스 검토 단계가 오류로 막힌다.
+   내부 테스트 트랙의 국가 설정은 프로덕션에 상속되지 않는다.
+   프로덕션 → 국가/지역 탭에서 헤더 체크박스로 전체 선택 후 저장.
+2. **"불완전한 광고 ID 선언"** — targetSdk 33+ 앱은 광고 ID 사용 여부를 신고해야
+   전송이 열린다. AdMob을 쓰면 매니페스트에 `com.google.android.gms.permission.AD_ID`가
+   자동 병합되므로 **예** + 목적은 **광고 또는 마케팅**만 체크
+   (앱 기능·애널리틱스·맞춤설정 등은 해당 없음 — Firebase 미연결, 계정 없음).
+   위치: 모니터링 및 개선 → 정책 및 프로그램 → 앱 콘텐츠 → 광고 ID.
+
+**AAB는 51.7MB라 브라우저 드래그앤드롭으로만 올릴 수 있다**(자동화 업로드 한도 초과).
+반복하려면 Play Developer API 서비스 계정 + `fastlane supply`를 붙일 것.
+
+## 2026-09-10 Play 거부 — 원인과 수정
+
+프로덕션 1.0.0 (9)가 **거부**됐다. 두 가지 정책 위반이었고 둘 다 실제 결함이었다.
+
+### 1. 손상된 기능 — "앱이 열리지만 계속 비정상 종료됩니다"
+
+릴리스 빌드가 **Dart 코드가 실행되기도 전에** 죽었다:
+
+```
+Unable to get provider androidx.startup.InitializationProvider
+Caused by: Failed to create an instance of androidx.work.impl.WorkDatabase
+  at androidx.work.WorkManagerInitializer
+```
+
+`google_mobile_ads`가 오프라인 광고 핑용으로 `androidx.work`를 끌고 오는데,
+WorkManager는 Room이 생성한 `WorkDatabase_Impl`을 **이름으로** 찾는다.
+R8이 그 이름을 바꿔버려서 앱이 시작 즉시 죽었다.
+
+**디버그 빌드에서는 R8이 안 돌아 절대 재현되지 않는다.** bootstrap.sh도 debug만
+빌드해서 여기까지 왔다. → `android/app/proguard-rules.pro`에 keep 규칙 추가.
+
+**릴리스 APK를 에뮬레이터에 올려 보지 않으면 이 부류는 못 잡는다:**
+
+```bash
+flutter build apk --release -t lib/main_prod.dart
+adb install -r build/app/outputs/flutter-apk/app-release.apk
+adb logcat -c && adb shell am start -n io.pinkspider.sudoku/.MainActivity
+adb shell pidof io.pinkspider.sudoku    # 비어 있으면 죽은 것
+adb logcat -d | grep -A20 "FATAL EXCEPTION"
+```
+
+### 2. 혼동을 야기하는 주장 — "설치된 아이콘 또는 이름이 스토어와 다릅니다"
+
+둘 다 틀렸었다:
+
+| | 거부 시점 | 수정 후 |
+|---|---|---|
+| 런처 아이콘 | **Flutter 기본 파란 로고** | 스도쿠 격자 (스토어 아이콘과 동일 SVG) |
+| 앱 내 AppBar | `Sudoku` | `Sudoku Daily` |
+| 런처 이름 | `Sudoku Daily` | 그대로 |
+| 스토어 등록정보 | `Sudoku Daily: Logic Puzzle` | 그대로 |
+
+`tool/gen_icons.sh`가 **iOS AppIcon만** 만들고 Android mipmap은 손대지 않아서,
+7월 Flutter 템플릿 아이콘이 그대로 배포됐다. iOS는 멀쩡했다.
+→ 스크립트에 Android 런처 아이콘 + adaptive icon 생성 추가.
+
+앱 내 타이틀은 `lib/l10n/app_*.arb`의 `appTitle`이다(`AppConfig.appName`은 아무
+데서도 쓰이지 않는 죽은 필드다). 4개 언어 모두 스토어 이름에 맞췄다.
+
+### 재제출 (2026-09-10 15:45~16:05)
+
+`1.0.0+10`으로 올려 양쪽 다 다시 제출했다.
+
+| | 상태 |
+|---|---|
+| Play | 검토 중. `fastlane production skip_build:true`로 53초 만에 업로드 |
+| App Store | 심사 대기 중. 빌드 9 제출을 취소하고 10으로 교체 |
+
+- **Play는 versionCode를 재사용할 수 없다.** 9는 거부됐어도 소모된 번호다.
+- **ASC는 심사 시작 전이면 제출을 취소할 수 있다**(앱 심사 → 제출 → 제출 취소).
+  취소하면 버전이 `개발자가 취소함`이 되고 메타데이터는 그대로 남는다.
+  빌드만 교체(9 삭제 → 10 추가)하고 다시 제출하면 된다.
+  빌드 행의 삭제 버튼은 hover해야 보이고 `aria-label="삭제"`다.
+- 업로드 직후에는 ASC 빌드 목록에 안 뜬다. 처리에 5~15분 걸리고
+  TestFlight 탭에서 `제출 준비 완료`가 되면 그때 선택할 수 있다.
+- **Fastfile의 `before_all` 가드도 새 시크릿 경로를 보도록 고쳤다.**
+  리포 밖으로 옮기면서 놓쳐서 첫 업로드가 "key.properties가 없다"로 막혔다.
+
+### 재제출 전 체크
+
+```bash
+cd apps/sudoku
+bash tool/gen_icons.sh                       # 아이콘 재생성(iOS+Android)
+flutter build apk --release -t lib/main_prod.dart
+# 위 adb 절차로 크래시 없음 + 런처 아이콘/이름 눈으로 확인
+```
 
 ## 제출 전 남은 것
 
