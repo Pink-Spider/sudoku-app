@@ -35,7 +35,14 @@ platform :android do
   desc "flutter build appbundle --release (main_prod.dart)"
   lane :build do
     Dir.chdir(APP_DIR) do
-      sh("flutter", "build", "appbundle", "--release", "-t", "lib/main_prod.dart")
+      # Real ad unit ids are not in the repo. Without them the prod flavor
+      # silently falls back to Google's test units — the app works and
+      # earns nothing — so ad_units.sh exits non-zero and takes the build
+      # down with it. See docs/ad-units.md.
+      defines = `tool/ad_units.sh`.strip
+      UI.user_error!("tool/ad_units.sh 실패 — docs/ad-units.md 참고") unless $?.success?
+      sh("flutter", "build", "appbundle", "--release",
+         "-t", "lib/main_prod.dart", *defines.split(" "))
     end
     UI.success("빌드 완료: #{AAB}")
   end

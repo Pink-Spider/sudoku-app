@@ -70,27 +70,59 @@ class AppConfig {
     );
   }
 
-  /// Real ad units from the AdMob console (publisher 6329038356545416).
+  /// Real ad unit ids, passed in at build time.
   ///
-  /// Shipping these is only safe because [umpTestDeviceIds] doubles as the
-  /// ads SDK's test-device list: a registered device gets test ads even
+  /// These are deliberately not in the repo. Anyone holding a unit id can
+  /// serve it from their own app, and the resulting invalid traffic gets
+  /// *our* AdMob account suspended, not theirs. They live in
+  /// `~/.pink-spider/secrets/sudoku/ad-units.env`; `tool/ad_units.sh`
+  /// turns that file into the --dart-define flags. See
+  /// docs/ad-units.md.
+  ///
+  /// Missing values fall back to Google's test units, so a fresh clone
+  /// still builds and runs — it just cannot earn. The release scripts
+  /// refuse to build without them so that never reaches a store.
+  static const _androidBanner = String.fromEnvironment('AD_UNIT_ANDROID_BANNER');
+  static const _androidInterstitial =
+      String.fromEnvironment('AD_UNIT_ANDROID_INTERSTITIAL');
+  static const _androidRewarded =
+      String.fromEnvironment('AD_UNIT_ANDROID_REWARDED');
+  static const _iosBanner = String.fromEnvironment('AD_UNIT_IOS_BANNER');
+  static const _iosInterstitial =
+      String.fromEnvironment('AD_UNIT_IOS_INTERSTITIAL');
+  static const _iosRewarded = String.fromEnvironment('AD_UNIT_IOS_REWARDED');
+
+  /// True when every real unit id was supplied. The release scripts check
+  /// this indirectly by requiring the env file; this is the last guard.
+  static bool get hasRealAdUnits =>
+      _androidBanner.isNotEmpty &&
+      _androidInterstitial.isNotEmpty &&
+      _androidRewarded.isNotEmpty &&
+      _iosBanner.isNotEmpty &&
+      _iosInterstitial.isNotEmpty &&
+      _iosRewarded.isNotEmpty;
+
+  /// Shipping real units is only safe because [umpTestDeviceIds] doubles as
+  /// the ads SDK's test-device list: a registered device gets test ads even
   /// from these units, so our own taps never become invalid traffic. Test
   /// on a registered device, or on the dev flavor.
   static AppConfig prod() => AppConfig(
         flavor: Flavor.prod,
         appName: 'Sudoku',
-        adUnitIds: AdUnitIds.platform(
-          android: const AdUnitIds(
-            banner: 'ca-app-pub-REDACTED/REDACTED',
-            interstitial: 'ca-app-pub-REDACTED/REDACTED',
-            rewarded: 'ca-app-pub-REDACTED/REDACTED',
-          ),
-          ios: const AdUnitIds(
-            banner: 'ca-app-pub-REDACTED/REDACTED',
-            interstitial: 'ca-app-pub-REDACTED/REDACTED',
-            rewarded: 'ca-app-pub-REDACTED/REDACTED',
-          ),
-        ),
+        adUnitIds: hasRealAdUnits
+            ? AdUnitIds.platform(
+                android: const AdUnitIds(
+                  banner: _androidBanner,
+                  interstitial: _androidInterstitial,
+                  rewarded: _androidRewarded,
+                ),
+                ios: const AdUnitIds(
+                  banner: _iosBanner,
+                  interstitial: _iosInterstitial,
+                  rewarded: _iosRewarded,
+                ),
+              )
+            : AdUnitIds.test(),
         umpTestDeviceIds: _adsTestDeviceIds,
       );
 }

@@ -14,8 +14,9 @@
   6.0.0은 Gradle 9에서 `configurations.all` 제거로 빌드 불가 → 9.x 필수.
 - `android/`, `ios/`는 리포에 커밋되어 있다. bootstrap은 없을 때만 `flutter create`로 만든다.
 - Firebase 미연결. `core_analytics`는 인터페이스 + Debug/Local 구현만 있다.
-- AdMob 앱 ID와 **광고 단위 ID 모두 실제 값**이다(게시자 6329038356545416).
-  prod만 실제 단위를 쓰고 dev는 테스트 단위를 유지한다.
+- AdMob **앱 ID**만 리포에 있다. **광고 단위 ID는 빌드 시 `--dart-define`으로 넣는다**
+  (`~/.pink-spider/secrets/sudoku/ad-units.env`, `tool/ad_units.sh`, `docs/ad-units.md`).
+  없으면 prod가 조용히 테스트 단위로 폴백하므로 릴리스 스크립트가 막는다.
 - **자가 클릭 방지가 코드에 들어 있다.** `--dart-define=UMP_TEST_DEVICE_IDS=<해시>`로
   넘긴 기기는 `MobileAds.updateRequestConfiguration`에 등록되어 실제 단위에서도
   테스트 광고만 받는다. 실기기로 prod를 테스트할 때는 **반드시 해시를 넘길 것** —
