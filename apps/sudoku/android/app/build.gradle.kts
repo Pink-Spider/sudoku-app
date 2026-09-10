@@ -6,13 +6,24 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// Release signing comes from android/key.properties, which is gitignored
-// along with the .jks it points at. Absent (fresh clone, CI without the
-// secrets) the release build falls back to debug keys so it still builds;
-// it just cannot be uploaded to Play.
+// Release signing. The secrets live OUTSIDE the repo so `git clean -xdf`
+// cannot delete them and they can never be committed by accident —
+// see docs/android-signing.md. Lookup order:
+//   1. $SUDOKU_SECRETS/key.properties   (CI, or a custom location)
+//   2. ~/.pink-spider/secrets/sudoku/key.properties   (this machine)
+//   3. android/key.properties           (legacy, still honoured)
+// None found (fresh clone, CI without secrets): the release build falls
+// back to debug keys so it still builds; it just cannot be uploaded to Play.
 val keystoreProperties = Properties().apply {
-    val f = rootProject.file("key.properties")
-    if (f.exists()) f.inputStream().use { load(it) }
+    val candidates = listOfNotNull(
+        System.getenv("SUDOKU_SECRETS")?.let { file("$it/key.properties") },
+        file("${System.getProperty("user.home")}/.pink-spider/secrets/sudoku/key.properties"),
+        rootProject.file("key.properties"),
+    )
+    candidates.firstOrNull { it.exists() }?.let { f ->
+        f.inputStream().use { load(it) }
+        logger.lifecycle("signing: using ${f.path}")
+    }
 }
 val hasReleaseKey = keystoreProperties.getProperty("storeFile") != null
 

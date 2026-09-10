@@ -15,6 +15,11 @@ pubspec.lock
 **/android/local.properties
 **/android/key.properties
 **/android/app/*.jks
+# Play Developer API 서비스 계정 키 — 절대 커밋 금지
+**/android/play-store-key.json
+**/android/fastlane/report.xml
+**/android/fastlane/README.md
+**/android/fastlane/Preview.html
 **/ios/Pods/
 **/ios/.symlinks/
 **/ios/Flutter/Flutter.podspec
@@ -34,3 +39,4 @@ pubspec.lock
 
 # OS
 .DS_Store
+/secrets/
