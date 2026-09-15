@@ -36,4 +36,13 @@ abstract class PuzzleRule {
   /// package cannot explain one (the engine then falls back to revealing
   /// a solution cell).
   Hint? nextHint(List<int> board, GridPuzzle puzzle) => null;
+
+  /// Is putting [value] into [index] right, given [solution]?
+  ///
+  /// Defaults to an exact match, which is what a fill-in-the-number puzzle
+  /// wants. Rules with values that are annotations rather than answers
+  /// override this — a nonogram's cross means "blank", and blank is stored
+  /// as `0` in the solution, so the two never compare equal.
+  bool isCorrect(int index, int value, List<int> solution) =>
+      value == solution[index];
 }
