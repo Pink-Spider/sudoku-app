@@ -119,3 +119,7 @@ App Manager 역할 API 키를 `~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.
 1. `packages/rules_<name>/`에 `PuzzleRule` 구현(생성기·솔버·힌트)
 2. `apps/<name>/`를 `apps/sudoku` 복제 후 `puzzleRuleProvider`만 교체
 3. 루트 `pubspec.yaml`의 `workspace:` 목록에 추가
+
+## 라이선스
+
+[GPL-3.0](LICENSE). Copyright (c) 2026 Yungoo Park (Pink Spider).
