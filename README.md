@@ -1,5 +1,11 @@
 # sudoku-app — puzzle app factory (1호: 클래식 스도쿠)
 
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.6+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![AdMob](https://img.shields.io/badge/AdMob-EA4335?logo=googleadmob&logoColor=white)](https://admob.google.com)
+![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey?logo=android&logoColor=white)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue)](LICENSE)
+
 인앱결제 없이 AdMob 광고만으로 운영하는 글로벌 퍼즐 앱. 공통 엔진 + 룰 패키지 구조라
 룰 패키지만 추가하면 킬러 스도쿠·카쿠로 등 다음 앱을 같은 코드베이스로 출시할 수 있다.
 
