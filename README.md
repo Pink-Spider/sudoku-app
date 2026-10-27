@@ -9,6 +9,11 @@
 인앱결제 없이 AdMob 광고만으로 운영하는 글로벌 퍼즐 앱. 공통 엔진 + 룰 패키지 구조라
 룰 패키지만 추가하면 킬러 스도쿠·카쿠로 등 다음 앱을 같은 코드베이스로 출시할 수 있다.
 
+<p>
+  <a href="https://apps.apple.com/app/id6810079534"><img src="docs/marketing/app-store-badge-ko-kr-black.svg" alt="App Store에서 다운로드" height="40" align="middle"></a>
+  <a href="https://play.google.com/store/apps/details?id=io.pinkspider.sudoku"><img src="https://play.google.com/intl/ko/badges/static/images/badges/ko_badge_web_generic.png" alt="Google Play에서 다운로드" height="60" align="middle"></a>
+</p>
+
 ## 구조 (Dart pub workspace)
 
 ```
